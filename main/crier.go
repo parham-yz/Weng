@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"math"
-	"os"
 	"time"
 )
 
@@ -19,10 +18,6 @@ func (cr *Crier) Init(dataBase *Cdb) *Crier {
 	cr.dataBase = dataBase
 	cr.HeaderFm.PostQueue = make(chan Wish, 20)
 	cr.serveQueue = make(chan Wish, 50)
-
-	os.Remove("intLog.txt")
-	logFile, _ := os.OpenFile("intLog.txt", os.O_CREATE|os.O_WRONLY, 0666)
-	log.SetOutput(logFile)
 
 	return cr
 }
@@ -44,10 +39,9 @@ func (cr *Crier) Run() {
 				continue
 			}
 
-			log.Printf("Crier >> Sending sig to < %v >\n", wish["id"])
 			cr.sendSigs(wish)
 
-		case <-time.After(time.Second / 20):
+		// case <-time.After(time.Second / 20):
 
 		case <-time.After(time.Second / 5):
 			for iter, intl := cr.dataBase.Inteligents.GetRoot(); iter != nil; iter, intl = cr.dataBase.Inteligents.Next(iter) {
@@ -86,6 +80,7 @@ func (cr *Crier) sendSigs(wish Wish) {
 		}
 	}
 
+	log.Printf("Crier >> Sending sig %v to < %v >\n", sig, wish["id"])
 	target.Brain.PushEnvSig(sig)
 
 }

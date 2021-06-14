@@ -45,17 +45,18 @@ func (kr *Kernel) Init(dataBase *Cdb) {
 
 }
 
-func (kr *Kernel) DropIn(obj *Object, tag string) uint {
+func (kr *Kernel) DropIn(obj *Object, tag string) *HeaderFm {
 	if !kr.alive {
 		panic("Krenel is dead")
 	}
 
-	obj.Id = kr.idGenerator
-	kr.idGenerator++
-	obj.Tag = tag
-
 	objc := new(Object)
 	*objc = *obj
+
+	objc.Id = kr.idGenerator
+	kr.idGenerator++
+	objc.Tag = tag
+
 	kr.dataBase.MainList.Add(objc)
 
 	kr.peng.PostQueue <- Wish{
@@ -73,7 +74,7 @@ func (kr *Kernel) DropIn(obj *Object, tag string) uint {
 		kr.dataBase.Movers.Add(objc)
 	}
 
-	return objc.Id
+	return &objc.HeaderFm
 }
 
 func (kr *Kernel) PullOut(id uint) {

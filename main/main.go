@@ -18,7 +18,7 @@ func main() {
 	})
 	kernel.Init(&db)
 	fmt.Println("starting")
-	kernel.StartIt(false)
+	kernel.StartIt(true)
 
 	jimi := newDumC([2]float64{0, 0})
 	walls := make([]*Object, 0)
@@ -32,11 +32,11 @@ func main() {
 	}
 
 	jimi.Brain = new(gongishkBrain)
-	fmt.Printf("jims id: %v\n", kernel.DropIn(jimi, ""))
+	jimi.HeaderFm = *kernel.DropIn(jimi, "")
 	jimi.MoveMe(1, PI)
 
 	for i := 0; i < 50; i++ {
-		fmt.Println(jimi.Phfm.Position)
+		// fmt.Println(jimi.Phfm.Position)
 		time.Sleep(time.Second / 2)
 	}
 
